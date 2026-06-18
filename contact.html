@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Lucy Evans</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/bootstrap-custom.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Lucy Evans</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
+          <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page header -->
+  <section class="hero text-center" style="padding: 4rem 0 3rem;">
+    <div class="container">
+      <p style="font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:#C4964A; font-family:monospace; margin-bottom:0.6rem;">Get in Touch</p>
+      <h1 style="font-size:2.4rem;">Let's Connect</h1>
+      <p class="lead" style="color:#BBBBBB; font-size:1rem; max-width:480px; margin:0.5rem auto 0;">Whether it's an internship opportunity, a project, or just to talk about film cameras — my inbox is open.</p>
+    </div>
+  </section>
+
+  <!-- Contact content -->
+  <section class="py-5">
+    <div class="container" style="max-width:860px;">
+      <div class="row g-5">
+
+        <!-- Form -->
+        <div class="col-md-7">
+          <p class="section-label">Send a Message</p>
+          <h2 class="section-title" style="font-size:1.6rem;">Say Hello</h2>
+          <div class="section-divider"></div>
+
+          <form>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label for="fname" class="form-label" style="font-size:0.85rem; color:#6B6358;">First Name</label>
+                <input type="text" class="form-control" id="fname" placeholder="Jane" />
+              </div>
+              <div class="col-sm-6">
+                <label for="lname" class="form-label" style="font-size:0.85rem; color:#6B6358;">Last Name</label>
+                <input type="text" class="form-control" id="lname" placeholder="Smith" />
+              </div>
+              <div class="col-12">
+                <label for="email" class="form-label" style="font-size:0.85rem; color:#6B6358;">Email Address</label>
+                <input type="email" class="form-control" id="email" placeholder="jane@example.com" />
+              </div>
+              <div class="col-12">
+                <label for="subject" class="form-label" style="font-size:0.85rem; color:#6B6358;">Subject</label>
+                <select class="form-select" id="subject">
+                  <option value="">Choose a topic…</option>
+                  <option>Internship Opportunity</option>
+                  <option>Project Collaboration</option>
+                  <option>Film Photography Chat</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label for="message" class="form-label" style="font-size:0.85rem; color:#6B6358;">Message</label>
+                <textarea class="form-control" id="message" rows="5" placeholder="What's on your mind?"></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-accent w-100">Send Message</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Info panel -->
+        <div class="col-md-5">
+          <p class="section-label">Details</p>
+          <h2 class="section-title" style="font-size:1.6rem;">Find Me Here</h2>
+          <div class="section-divider"></div>
+
+          <div class="card p-4 mb-3">
+            <h6 style="font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:#C4964A; margin-bottom:0.6rem;">Location</h6>
+            <p class="mb-0" style="font-size:0.92rem; color:#555;">Provo, Utah &mdash; BYU Campus</p>
+          </div>
+
+          <div class="card p-4 mb-3">
+            <h6 style="font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:#C4964A; margin-bottom:0.6rem;">Email</h6>
+            <p class="mb-0" style="font-size:0.92rem; color:#555;"><a href="mailto:Lucyevans954@gmail.com" style="color:#C4964A;">Lucyevans954@gmail.com</a></p>
+          </div>
+
+          <div class="card p-4 mb-3">
+            <h6 style="font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:#C4964A; margin-bottom:0.6rem;">LinkedIn</h6>
+            <p class="mb-0" style="font-size:0.92rem; color:#555;"><a href="https://www.linkedin.com/in/lucy-evans-645763403/" target="_blank" style="color:#C4964A;">linkedin.com/in/lucy-evans-645763403</a></p>
+          </div>
+
+          <div class="card p-4">
+            <h6 style="font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:#C4964A; margin-bottom:0.6rem;">Also</h6>
+            <p style="font-size:0.92rem; color:#555; margin-bottom:0.5rem;">Check out my film photography page:</p>
+            <a href="scratch.html" style="font-size:0.92rem; color:#C4964A;">→ Film Photography</a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <p class="mb-1">Lucy Evans &mdash; BYU Marketing &rsquo;27</p>
+      <p class="mb-0"><a href="contact.html" style="color: #C4964A;">Get in touch</a></p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

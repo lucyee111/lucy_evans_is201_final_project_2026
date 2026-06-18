@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Film Roll Snake — Lucy Evans</title>
+  <style>
+    /* ── Reset & base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #0D0B09;
+      font-family: 'Courier New', Courier, monospace;
+      color: #E8E0D0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    /* ── Back link ────────────────────────────────────────── */
+    .back-link {
+      align-self: flex-start;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .back-link a {
+      color: #C4964A;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link a:hover { color: #E0B870; }
+
+    /* ── Game header ──────────────────────────────────────── */
+    .game-header {
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .game-title {
+      font-family: 'Courier New', monospace;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #F0E6D3;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .game-subtitle {
+      font-size: 0.72rem;
+      color: #665E50;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* ── Score bar ────────────────────────────────────────── */
+    .scoreboard {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      margin-bottom: 0.8rem;
+      background: #181510;
+      border: 1px solid #2E2820;
+      padding: 0.6rem 2.5rem;
+      border-radius: 2px;
+    }
+
+    .score-item {
+      text-align: center;
+    }
+
+    .score-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #665E50;
+      margin-bottom: 0.1rem;
+    }
+
+    .score-value {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #C4964A;
+    }
+
+    /* ── Canvas wrapper ───────────────────────────────────── */
+    .canvas-wrapper {
+      position: relative;
+      border: 2px solid #2E2820;
+      line-height: 0;
+      width: 480px;
+      margin: 0 auto;
+    }
+
+    canvas {
+      display: block;
+      background: #0A0907;
+    }
+
+    /* ── Overlay screens ──────────────────────────────────── */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 9, 7, 0.88);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .overlay h2 {
+      font-size: 1.5rem;
+      color: #F0E6D3;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .overlay p {
+      font-size: 0.8rem;
+      color: #888070;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .overlay .final-score {
+      font-size: 2rem;
+      color: #C4964A;
+      font-weight: bold;
+      margin: 0.6rem 0;
+    }
+
+    .overlay .hint {
+      font-size: 0.7rem;
+      color: #554E42;
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .overlay .flash-text {
+      font-size: 0.85rem;
+      color: #C4964A;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      animation: blink 1.1s step-end infinite;
+      margin-top: 0.8rem;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ── Speed indicator ──────────────────────────────────── */
+    .speed-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.7rem;
+      font-size: 0.7rem;
+      color: #554E42;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .speed-pips {
+      display: flex;
+      gap: 3px;
+    }
+
+    .pip {
+      width: 10px;
+      height: 10px;
+      border: 1px solid #2E2820;
+      border-radius: 1px;
+      background: #1C1812;
+      transition: background 0.3s;
+    }
+
+    .pip.lit { background: #C4964A; }
+
+    /* ── Controls hint ────────────────────────────────────── */
+    .controls-hint {
+      margin-top: 0.8rem;
+      font-size: 0.65rem;
+      color: #3E3830;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="back-link">
+    <a href="scratch.html">← Back to Film Photography</a>
+  </div>
+
+  <div class="game-header">
+    <div class="game-title">📽 Film Roll Snake</div>
+    <div class="game-subtitle">The darkroom arcade — 36 frames per roll</div>
+  </div>
+
+  <div class="scoreboard">
+    <div class="score-item">
+      <div class="score-label">Frames Shot</div>
+      <div class="score-value" id="scoreDisplay">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Best Roll</div>
+      <div class="score-value" id="highScoreDisplay">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Roll #</div>
+      <div class="score-value" id="rollDisplay">1</div>
+    </div>
+  </div>
+
+  <div class="canvas-wrapper">
+    <canvas id="gameCanvas" width="480" height="480"></canvas>
+
+    <!-- Start screen -->
+    <div class="overlay" id="startScreen">
+      <div class="overlay-icon">📽</div>
+      <h2>Film Roll Snake</h2>
+      <p>You are a strip of film, collecting light</p>
+      <p style="margin-top:0.3rem;">Every frame you capture grows your roll</p>
+      <p style="margin-top:0.3rem;">Shoot 36 frames to complete a full roll</p>
+      <div class="flash-text">Press SPACE to load film</div>
+      <div class="hint">Arrow keys to move · Don't hit the edges or yourself</div>
+    </div>
+
+    <!-- Game over screen -->
+    <div class="overlay hidden" id="gameOverScreen">
+      <div class="overlay-icon">🎞️</div>
+      <h2>Film Exhausted</h2>
+      <p>Frames captured this roll:</p>
+      <div class="final-score" id="finalScore">0</div>
+      <p id="rollCompleteMsg" style="color:#C4964A; display:none;">Full roll completed! 🏆</p>
+      <div class="flash-text">Press SPACE to reload</div>
+    </div>
+
+    <!-- Roll complete celebration (brief) -->
+    <div class="overlay hidden" id="rollCompleteScreen">
+      <div class="overlay-icon">✨</div>
+      <h2>Roll Complete!</h2>
+      <p>36 frames — perfect roll</p>
+      <p style="color:#C4964A; margin-top:0.5rem;" id="rollCompleteRollNum"></p>
+      <div class="flash-text">Loading next roll…</div>
+    </div>
+  </div>
+
+  <div class="speed-bar">
+    <span>Speed:</span>
+    <div class="speed-pips" id="speedPips">
+      <div class="pip" id="pip0"></div>
+      <div class="pip" id="pip1"></div>
+      <div class="pip" id="pip2"></div>
+      <div class="pip" id="pip3"></div>
+      <div class="pip" id="pip4"></div>
+    </div>
+  </div>
+
+  <div class="controls-hint">Arrow keys to move &nbsp;·&nbsp; SPACE to start/restart &nbsp;·&nbsp; P to pause</div>
+
+<script>
+(function() {
+  // ── Config ────────────────────────────────────────────────
+  const CANVAS_SIZE  = 480;
+  const CELL         = 20;          // px per grid cell
+  const GRID         = CANVAS_SIZE / CELL;  // 24 cells
+  const BASE_SPEED   = 140;         // ms per tick (normal)
+  const SPEED_STEP   = 12;          // ms faster per 5 points
+  const MIN_SPEED    = 60;          // ms (fastest)
+  const FRAMES_PER_ROLL = 36;
+
+  // ── Canvas setup ─────────────────────────────────────────
+  const canvas  = document.getElementById('gameCanvas');
+  const ctx     = canvas.getContext('2d');
+
+  // ── State ─────────────────────────────────────────────────
+  let snake, dir, nextDir, food, specialFood;
+  let score, highScore, rollNumber;
+  let gameRunning, gamePaused;
+  let loopTimer;
+  let specialFoodTimer;
+
+  highScore = 0;
+  rollNumber = 1;
+
+  // ── DOM refs ──────────────────────────────────────────────
+  const scoreEl     = document.getElementById('scoreDisplay');
+  const hiEl        = document.getElementById('highScoreDisplay');
+  const rollEl      = document.getElementById('rollDisplay');
+  const startScreen = document.getElementById('startScreen');
+  const gameOverScreen = document.getElementById('gameOverScreen');
+  const finalScoreEl = document.getElementById('finalScore');
+  const rollCompleteScreen = document.getElementById('rollCompleteScreen');
+  const rollCompleteRollNum = document.getElementById('rollCompleteRollNum');
+  const rollCompleteMsg = document.getElementById('rollCompleteMsg');
+  const pips = [0,1,2,3,4].map(i => document.getElementById('pip'+i));
+
+  // ── Colors ────────────────────────────────────────────────
+  const COLORS = {
+    grid:         '#111009',
+    gridLine:     '#16130F',
+    snakeHead:    '#C4964A',
+    snakeBody:    '#8B6914',
+    snakeEdge:    '#6B4F10',
+    filmHole:     '#0A0907',
+    food:         '#E8D5A0',
+    foodGlow:     'rgba(232,213,160,0.25)',
+    specialFood:  '#FF6B6B',
+    specialGlow:  'rgba(255,107,107,0.3)',
+    text:         '#C8BFB0',
+  };
+
+  // ── Initialise / reset ────────────────────────────────────
+  function initGame() {
+    clearTimeout(loopTimer);
+    clearTimeout(specialFoodTimer);
+
+    snake = [
+      { x: 12, y: 12 },
+      { x: 11, y: 12 },
+      { x: 10, y: 12 },
+    ];
+    dir      = { x: 1, y: 0 };
+    nextDir  = { x: 1, y: 0 };
+    score    = 0;
+    specialFood = null;
+    placeFood();
+    updateUI();
+  }
+
+  // ── Place regular food ────────────────────────────────────
+  function placeFood() {
+    let pos;
+    do {
+      pos = { x: Math.floor(Math.random() * GRID), y: Math.floor(Math.random() * GRID) };
+    } while (onSnake(pos) || (specialFood && specialFood.x === pos.x && specialFood.y === pos.y));
+    food = pos;
+
+    // 20% chance to spawn special food (flash bulb) after each regular food
+    if (!specialFood && Math.random() < 0.2) {
+      spawnSpecialFood();
+    }
+  }
+
+  function spawnSpecialFood() {
+    let pos;
+    do {
+      pos = { x: Math.floor(Math.random() * GRID), y: Math.floor(Math.random() * GRID) };
+    } while (onSnake(pos) || (food && food.x === pos.x && food.y === pos.y));
+    specialFood = pos;
+
+    // Special food disappears after 6 seconds
+    clearTimeout(specialFoodTimer);
+    specialFoodTimer = setTimeout(() => {
+      specialFood = null;
+    }, 6000);
+  }
+
+  function onSnake(pos) {
+    return snake.some(s => s.x === pos.x && s.y === pos.y);
+  }
+
+  // ── Game tick ─────────────────────────────────────────────
+  function tick() {
+    if (!gameRunning || gamePaused) return;
+
+    dir = { ...nextDir };
+
+    const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+    // Wall collision
+    if (head.x < 0 || head.x >= GRID || head.y < 0 || head.y >= GRID) {
+      endGame(); return;
+    }
+    // Self collision
+    if (snake.some(s => s.x === head.x && s.y === head.y)) {
+      endGame(); return;
+    }
+
+    snake.unshift(head);
+
+    let grew = false;
+
+    // Regular food
+    if (head.x === food.x && head.y === food.y) {
+      score++;
+      grew = true;
+      placeFood();
+    }
+
+    // Special food (worth 3 points, flash bulb effect)
+    if (specialFood && head.x === specialFood.x && head.y === specialFood.y) {
+      score += 3;
+      grew = true;
+      specialFood = null;
+      clearTimeout(specialFoodTimer);
+    }
+
+    if (!grew) snake.pop();
+
+    updateUI();
+    draw();
+
+    // Check for full roll completion
+    if (score >= FRAMES_PER_ROLL) {
+      handleRollComplete();
+      return;
+    }
+
+    const speed = Math.max(MIN_SPEED, BASE_SPEED - Math.floor(score / 5) * SPEED_STEP);
+    loopTimer = setTimeout(tick, speed);
+  }
+
+  function handleRollComplete() {
+    gameRunning = false;
+    rollNumber++;
+    rollCompleteRollNum.textContent = 'Starting Roll #' + rollNumber;
+    showScreen(rollCompleteScreen);
+    setTimeout(() => {
+      hideAllScreens();
+      initGame();
+      startGame();
+    }, 2200);
+  }
+
+  // ── UI helpers ────────────────────────────────────────────
+  function updateUI() {
+    if (score > highScore) highScore = score;
+    scoreEl.textContent = score;
+    hiEl.textContent    = highScore;
+    rollEl.textContent  = rollNumber;
+
+    // Speed pips: one pip per 5-point interval
+    const level = Math.min(5, Math.floor(score / 5));
+    pips.forEach((pip, i) => {
+      pip.classList.toggle('lit', i < level);
+    });
+  }
+
+  // ── Drawing ───────────────────────────────────────────────
+  function draw() {
+    // Background grid
+    ctx.fillStyle = COLORS.grid;
+    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+    // Subtle grid lines
+    ctx.strokeStyle = COLORS.gridLine;
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= GRID; i++) {
+      ctx.beginPath(); ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, CANVAS_SIZE); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i * CELL); ctx.lineTo(CANVAS_SIZE, i * CELL); ctx.stroke();
+    }
+
+    // Special food (flash bulb — red glow)
+    if (specialFood) {
+      const sfx = specialFood.x * CELL;
+      const sfy = specialFood.y * CELL;
+      const t = Date.now() / 400;
+      const pulse = 0.7 + 0.3 * Math.sin(t);
+
+      ctx.save();
+      ctx.globalAlpha = pulse;
+      const sfGrad = ctx.createRadialGradient(sfx + CELL/2, sfy + CELL/2, 2, sfx + CELL/2, sfy + CELL/2, CELL);
+      sfGrad.addColorStop(0, COLORS.specialFood);
+      sfGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = sfGrad;
+      ctx.beginPath();
+      ctx.arc(sfx + CELL/2, sfy + CELL/2, CELL, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = COLORS.specialFood;
+      ctx.beginPath();
+      ctx.arc(sfx + CELL/2, sfy + CELL/2, CELL / 2.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // ⚡ label
+      ctx.fillStyle = '#FFF';
+      ctx.font = 'bold 9px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('+3', sfx + CELL/2, sfy + CELL/2);
+    }
+
+    // Regular food (film canister icon look — circle with cross)
+    if (food) {
+      const fx = food.x * CELL;
+      const fy = food.y * CELL;
+      const t = Date.now() / 600;
+      const pulse = 0.5 + 0.5 * Math.sin(t);
+
+      // Glow
+      ctx.save();
+      ctx.globalAlpha = 0.4 * pulse;
+      const grd = ctx.createRadialGradient(fx + CELL/2, fy + CELL/2, 1, fx + CELL/2, fy + CELL/2, CELL);
+      grd.addColorStop(0, COLORS.food);
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(fx + CELL/2, fy + CELL/2, CELL, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Food dot
+      ctx.fillStyle = COLORS.food;
+      ctx.beginPath();
+      ctx.arc(fx + CELL/2, fy + CELL/2, CELL / 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Aperture blades (6-point star)
+      ctx.save();
+      ctx.translate(fx + CELL/2, fy + CELL/2);
+      ctx.fillStyle = '#0A0907';
+      for (let i = 0; i < 6; i++) {
+        ctx.save();
+        ctx.rotate((Math.PI / 3) * i);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-2, CELL / 3.5);
+        ctx.lineTo(2, CELL / 3.5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    // Snake — draw as film strip
+    snake.forEach((seg, i) => {
+      const x = seg.x * CELL;
+      const y = seg.y * CELL;
+      const isHead = i === 0;
+
+      // Body fill
+      ctx.fillStyle = isHead ? COLORS.snakeHead : COLORS.snakeBody;
+      ctx.fillRect(x + 1, y + 1, CELL - 2, CELL - 2);
+
+      // Edge highlight (darker)
+      ctx.strokeStyle = COLORS.snakeEdge;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x + 1, y + 1, CELL - 2, CELL - 2);
+
+      if (isHead) {
+        // Eyes
+        ctx.fillStyle = '#0A0907';
+        const eyeOffset = 4;
+        const eyeSize   = 3;
+        if (dir.x === 1) {
+          ctx.fillRect(x + CELL - 6, y + eyeOffset, eyeSize, eyeSize);
+          ctx.fillRect(x + CELL - 6, y + CELL - eyeOffset - eyeSize, eyeSize, eyeSize);
+        } else if (dir.x === -1) {
+          ctx.fillRect(x + 3, y + eyeOffset, eyeSize, eyeSize);
+          ctx.fillRect(x + 3, y + CELL - eyeOffset - eyeSize, eyeSize, eyeSize);
+        } else if (dir.y === -1) {
+          ctx.fillRect(x + eyeOffset, y + 3, eyeSize, eyeSize);
+          ctx.fillRect(x + CELL - eyeOffset - eyeSize, y + 3, eyeSize, eyeSize);
+        } else {
+          ctx.fillRect(x + eyeOffset, y + CELL - 6, eyeSize, eyeSize);
+          ctx.fillRect(x + CELL - eyeOffset - eyeSize, y + CELL - 6, eyeSize, eyeSize);
+        }
+      } else {
+        // Film perforation holes on body segments (alternating)
+        if (i % 2 === 0) {
+          ctx.fillStyle = COLORS.filmHole;
+          const hSize = 4;
+          const hPad  = 3;
+          ctx.fillRect(x + hPad, y + hPad, hSize, hSize);
+          ctx.fillRect(x + CELL - hPad - hSize, y + hPad, hSize, hSize);
+          ctx.fillRect(x + hPad, y + CELL - hPad - hSize, hSize, hSize);
+          ctx.fillRect(x + CELL - hPad - hSize, y + CELL - hPad - hSize, hSize, hSize);
+        }
+      }
+    });
+
+    // Progress indicator (film frames remaining)
+    const progress = Math.min(score / FRAMES_PER_ROLL, 1);
+    ctx.fillStyle = 'rgba(196,150,74,0.15)';
+    ctx.fillRect(0, CANVAS_SIZE - 4, CANVAS_SIZE * progress, 4);
+    ctx.fillStyle = '#C4964A';
+    ctx.fillRect(0, CANVAS_SIZE - 4, CANVAS_SIZE * progress, 4);
+  }
+
+  // ── Screens ───────────────────────────────────────────────
+  function hideAllScreens() {
+    [startScreen, gameOverScreen, rollCompleteScreen].forEach(s => s.classList.add('hidden'));
+  }
+
+  function showScreen(el) {
+    hideAllScreens();
+    el.classList.remove('hidden');
+  }
+
+  // ── Game flow ─────────────────────────────────────────────
+  function startGame() {
+    hideAllScreens();
+    gameRunning = true;
+    gamePaused  = false;
+    tick();
+  }
+
+  function endGame() {
+    gameRunning = false;
+    clearTimeout(loopTimer);
+    if (score > highScore) highScore = score;
+    finalScoreEl.textContent = score;
+    rollCompleteMsg.style.display = (score >= FRAMES_PER_ROLL) ? 'block' : 'none';
+    showScreen(gameOverScreen);
+    draw(); // freeze frame
+  }
+
+  // ── Input ─────────────────────────────────────────────────
+  const KEY_MAP = {
+    ArrowUp:    { x: 0,  y: -1 },
+    ArrowDown:  { x: 0,  y:  1 },
+    ArrowLeft:  { x: -1, y:  0 },
+    ArrowRight: { x: 1,  y:  0 },
+    w: { x: 0,  y: -1 },
+    s: { x: 0,  y:  1 },
+    a: { x: -1, y:  0 },
+    d: { x: 1,  y:  0 },
+  };
+
+  document.addEventListener('keydown', e => {
+    if (e.key === ' ') {
+      e.preventDefault();
+      if (!gameRunning) {
+        initGame();
+        startGame();
+      }
+      return;
+    }
+
+    if (e.key === 'p' || e.key === 'P') {
+      if (!gameRunning) return;
+      gamePaused = !gamePaused;
+      if (!gamePaused) tick();
+      return;
+    }
+
+    const newDir = KEY_MAP[e.key];
+    if (!newDir) return;
+    e.preventDefault();
+
+    // Prevent reversing
+    if (newDir.x !== 0 && newDir.x === -dir.x) return;
+    if (newDir.y !== 0 && newDir.y === -dir.y) return;
+
+    nextDir = newDir;
+  });
+
+  // Mobile swipe support
+  let touchStartX = 0, touchStartY = 0;
+  canvas.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+
+    if (!gameRunning) { initGame(); startGame(); return; }
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      const nd = dx > 0 ? { x: 1, y: 0 } : { x: -1, y: 0 };
+      if (nd.x !== -dir.x) nextDir = nd;
+    } else {
+      const nd = dy > 0 ? { x: 0, y: 1 } : { x: 0, y: -1 };
+      if (nd.y !== -dir.y) nextDir = nd;
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  // ── Idle animation (food pulse while on start screen) ────
+  function idleDraw() {
+    if (gameRunning) return;
+    draw();
+    requestAnimationFrame(idleDraw);
+  }
+
+  // ── Init ──────────────────────────────────────────────────
+  gameRunning = false;
+  gamePaused  = false;
+  initGame();
+  requestAnimationFrame(idleDraw);
+})();
+</script>
+
+</body>
+</html>

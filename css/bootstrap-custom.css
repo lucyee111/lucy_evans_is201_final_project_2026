@@ -1,0 +1,180 @@
+/* ── Google Font ─────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+
+/* ── Root tokens ─────────────────────────────────────────── */
+:root {
+  --accent:   #C4964A;
+  --dark:     #1C1C1C;
+  --cream:    #F7F3EE;
+  --mid:      #6B6358;
+  --card-bg:  #FFFFFF;
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+body {
+  background-color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  color: #2C2C2C;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* ── Navbar ──────────────────────────────────────────────── */
+.navbar {
+  background-color: var(--dark) !important;
+  border-bottom: 2px solid var(--accent);
+}
+
+.navbar-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--cream) !important;
+  letter-spacing: 0.04em;
+}
+
+.nav-link {
+  color: #CCCCCC !important;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--accent) !important;
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+.hero {
+  background-color: var(--dark);
+  color: var(--cream);
+  padding: 6rem 0 5rem;
+}
+
+.hero h1 {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.hero p.lead {
+  color: #BBBBBB;
+  font-weight: 300;
+  font-size: 1.15rem;
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  color: var(--dark);
+  font-weight: 600;
+  border: none;
+  padding: 0.65rem 1.75rem;
+  letter-spacing: 0.04em;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-accent:hover {
+  background-color: #b08438;
+  color: var(--dark);
+  transform: translateY(-1px);
+}
+
+.btn-outline-cream {
+  border: 2px solid var(--cream);
+  color: var(--cream);
+  padding: 0.65rem 1.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+
+.btn-outline-cream:hover {
+  background-color: var(--cream);
+  color: var(--dark);
+}
+
+/* ── Section headings ────────────────────────────────────── */
+.section-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+}
+
+.section-divider {
+  width: 48px;
+  height: 3px;
+  background-color: var(--accent);
+  margin-bottom: 2rem;
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.card {
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  background-color: var(--card-bg);
+}
+
+.card-header-accent {
+  border-left: 4px solid var(--accent);
+  padding-left: 1rem;
+}
+
+/* ── Resume specifics ────────────────────────────────────── */
+.resume-section {
+  margin-bottom: 2.5rem;
+}
+
+.resume-entry-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 0.1rem;
+}
+
+.resume-entry-sub {
+  font-size: 0.88rem;
+  color: var(--mid);
+  margin-bottom: 0.4rem;
+}
+
+.badge-skill {
+  background-color: var(--cream);
+  color: var(--dark);
+  border: 1px solid #DDD5C8;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+  margin: 0.2rem;
+  display: inline-block;
+}
+
+/* ── Contact form ────────────────────────────────────────── */
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem rgba(196, 150, 74, 0.2);
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+footer {
+  background-color: var(--dark);
+  color: #888;
+  font-size: 0.85rem;
+  padding: 2rem 0;
+  border-top: 2px solid var(--accent);
+}
